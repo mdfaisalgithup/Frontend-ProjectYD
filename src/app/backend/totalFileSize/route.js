@@ -5,7 +5,7 @@ export const TotalFileSizeS = async (SizeSF) => {
    
 
       if(TotalSize) {
-        const res = await fetch('http://localhost:3000/total-size', {
+        const res = await fetch('https://frontend-project-yd.vercel.app/total-size', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
