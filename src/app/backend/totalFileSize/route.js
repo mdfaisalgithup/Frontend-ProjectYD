@@ -1,7 +1,7 @@
 let TotalSize = 0;
 
 export const TotalFileSizeS = async (SizeSF) => {
-    TotalSize = SizeSF;  // number হিসেবে রাখো
+    TotalSize = SizeSF;  // number 
    
 
       if(TotalSize) {
@@ -19,16 +19,3 @@ export const TotalFileSizeS = async (SizeSF) => {
   }
 }
 
-// export async function GET() {  
-//    console.log(TotalSize)
-
-//     return new Response(
-//       JSON.stringify({ TotalSize: TotalSize }),  // এখানে প্রয়োজন হলে দুই দশমিক নিয়ে পাঠাও
-//       {
-//         headers: {
-//           "Content-Type": "application/json",
-//           "Cache-Control": "no-cache",
-//         },
-//       }
-//     );
-// }

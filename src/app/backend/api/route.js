@@ -2,7 +2,7 @@
 
 import { NextResponse } from 'next/server';
 
-// const fs = require('fs');
+
 const ytdl = require('ytdl-core');
 
 
@@ -18,7 +18,7 @@ export async function POST(request) {
 
   const info = await ytdl.getInfo(url);
 
-// সেকেন্ড → মিনিট:সেকেন্ড কনভার্ট ফাংশন
+
 function formatDuration(seconds) {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
@@ -47,7 +47,7 @@ const hdMp4Formats = Array.from(
         format.hasVideo
       )
       .map(format => [
-        format.itag, // key হিসেবে itag ব্যবহার করলে ডুপ্লিকেট রিমুভ হবে
+        format.itag, 
         {
           itag: format.itag,
           qualityLabel: format.qualityLabel,
@@ -56,7 +56,7 @@ const hdMp4Formats = Array.from(
           size: format.contentLength
             ? (parseInt(format.contentLength) / (1024 * 1024)).toFixed(2)
             : 'Unknown',
-          duration: videoDuration, // এখানে duration অ্যাড করলাম
+          duration: videoDuration, 
         }
       ])
   ).values()
@@ -68,7 +68,7 @@ const hdMp4Formats = Array.from(
 
 
 
-// শুধু সবচেয়ে বড় থাম্বনেইল
+
 const thumbnail = info.videoDetails.thumbnails.slice(-1)[0].url;
 
 
@@ -78,7 +78,7 @@ const audioFormats = Array.from(
     info.formats
       .filter(audioFor => audioFor.hasAudio && !audioFor.hasVideo && audioFor.container === 'mp4')
       .map(audioFor => [
-        audioFor.itag,  // key হিসেবে itag ব্যবহার করে ডুপ্লিকেট রিমুভ হবে
+        audioFor.itag,  
         {
           itag: audioFor.itag,
           quality: audioFor.quality || 'Unknown',
@@ -102,7 +102,7 @@ const audioFormats = Array.from(
       throw new Error('No suitable audio format found');
     }
 
-    // bitrate বেশি এমন অডিও বেছে নেওয়া
+
     const audioFormat = audioFormats.reduce((prev, curr) =>
       (curr.bitrate || 0) > (prev.bitrate || 0) ? curr : prev
     );
@@ -112,7 +112,7 @@ const ausioSizesFor = parseFloat(audioFormat?.size).toFixed(2)
  
     
 
-// parseInt(audioFormat.contentLength) / (1024 * 1024);
+
 
 
 

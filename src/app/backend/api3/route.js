@@ -68,7 +68,7 @@ if (videoFormats.length === 0) {
 
    
 
-    // high hd audio filter - bitrate বেশি এমন অডিও বেছে নেওয়া
+    // high hd audio filter -
     const audioFormat = audioFormats?.reduce((prev, curr) =>
       (curr.bitrate || 0) > (prev.bitrate || 0) ? curr : prev
     );
@@ -125,7 +125,7 @@ audioStream.pipe(audioWriteStream);
 
 
 
-    // ডাউনলোড শেষ হওয়া পর্যন্ত অপেক্ষা
+
  await Promise.all([
   new Promise((res) => videoWriteStream.on('finish', () => {
 updateDownloaded()
@@ -141,7 +141,7 @@ updateDownloaded()
   })),
 ]);
 
-    // ffmpeg দিয়ে মের্জ করা
+
     await new Promise((resolve, reject) => {
       ffmpeg()
         .input(videoTemp)
@@ -150,7 +150,7 @@ updateDownloaded()
         .save(outputFile)
         .on('end', () => {
 
- const stats = fs.statSync(outputFile);// ফাইল ইনফো
+ const stats = fs.statSync(outputFile);
  const DataByte = stats.size;
       console.log(`✅ Merge complete!`);
       const mergeFileDone = "Download Done!"
@@ -164,14 +164,14 @@ updateDownloaded()
         .on('error', reject);
     });
 
-    // টেম্প ফাইল ডিলিট
+
     fs.unlinkSync(videoTemp);
     fs.unlinkSync(audioTemp);
 
-    // মের্জ করা ভিডিও রিড করে রেসপন্সে পাঠানো
+
     const fileBuffer = fs.readFileSync(outputFile);
 
-    // আউটপুট ফাইল ডিলিট (অপশনাল)
+
     fs.unlinkSync(outputFile);
 
      

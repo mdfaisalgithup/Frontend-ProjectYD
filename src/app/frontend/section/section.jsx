@@ -14,7 +14,7 @@ export default function VideoDownloader() {
     setLoading(true);
 
     try {
-      // API থেকে ফাইল ফেচ করা
+      // API 
       const response = await fetch(`backend/api2?url=${encodeURIComponent(url)}`);
 
       if (!response.ok) {
@@ -24,10 +24,9 @@ export default function VideoDownloader() {
         return;
       }
 
-      // ফাইলের বাইনরি ডাটা পড়া
+     
       const blob = await response.blob();
 
-      // ব্রাউজারে ডাউনলোড শুরু করার জন্য লিঙ্ক তৈরি
       const downloadUrl = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = downloadUrl;

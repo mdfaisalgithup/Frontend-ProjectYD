@@ -25,21 +25,20 @@ const outputFile = path.join(os.tmpdir(), 'merged_output.mp4');
   try {
     const info = await ytdl.getInfo(videoUrl);
 
-    // ১) ভিডিও ফরম্যাট সিলেক্ট (যে ফরম্যাটে ভিডিও আছে কিন্তু অডিও নেই)
+
     const videoFormats = info.formats.filter(
       (f) =>
         f.hasVideo &&
         !f.hasAudio &&
         f.container === 'mp4' &&
-        f.qualityLabel === '720p' // আপনার পছন্দ মতো এখানে পরিবর্তন করতে পারেন
+        f.qualityLabel === '720p' 
     );
 
     if (videoFormats.length === 0) {
       throw new Error('No suitable video format found');
     }
-    const videoFormat = videoFormats[0]; // প্রথম ফরম্যাট নিবো
+    const videoFormat = videoFormats[0]; 
 
-    // ২) অডিও ফরম্যাট সিলেক্ট (অডিও আছে কিন্তু ভিডিও নেই)
     const audioFormats = info.formats.filter(
       (f) => f.hasAudio && !f.hasVideo && f.container === 'mp4'
     );
@@ -47,31 +46,30 @@ const outputFile = path.join(os.tmpdir(), 'merged_output.mp4');
       throw new Error('No suitable audio format found');
     }
 
-    // bitrate বেশি এমন অডিও বেছে নেওয়া
+  
     const audioFormat = audioFormats.reduce((prev, curr) =>
       (curr.bitrate || 0) > (prev.bitrate || 0) ? curr : prev
     );
 
-    // ভিডিও ও অডিও স্ট্রিম
+ 
     const videoStream = ytdl.downloadFromInfo(info, { format: videoFormat });
     const audioStream = ytdl.downloadFromInfo(info, { format: audioFormat });
 
-    // ভিডিও ডাউনলোড
+
     const videoWriteStream = fs.createWriteStream(videoTemp);
 
 
 
-    // অডিও ডাউনলোড
+   
     const audioWriteStream = fs.createWriteStream(audioTemp);
     audioStream.pipe(audioWriteStream);
 
-    // ডাউনলোড শেষ হওয়া পর্যন্ত অপেক্ষা
     await Promise.all([
       new Promise((res) => videoWriteStream.on('finish', res)),
       new Promise((res) => audioWriteStream.on('finish', res)),
     ]);
 
-    // ffmpeg দিয়ে মের্জ করা
+    
     await new Promise((resolve, reject) => {
       ffmpeg()
         .input(videoTemp)
@@ -82,14 +80,14 @@ const outputFile = path.join(os.tmpdir(), 'merged_output.mp4');
         .on('error', reject);
     });
 
-    // টেম্প ফাইল ডিলিট
+
     fs.unlinkSync(videoTemp);
     fs.unlinkSync(audioTemp);
 
-    // মের্জ করা ভিডিও রিড করে রেসপন্সে পাঠানো
+
     const fileBuffer = fs.readFileSync(outputFile);
 
-    // আউটপুট ফাইল ডিলিট (অপশনাল)
+   
     fs.unlinkSync(outputFile);
 
     return new Response(fileBuffer, {
