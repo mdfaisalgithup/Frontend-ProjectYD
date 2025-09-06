@@ -18,7 +18,7 @@ export default function Home() {
     }
 
     setLoading(true);
-    const res = await fetch('/backend/api', {
+    const res = await fetch('https://frontend-project-yd.vercel.app/backend/api', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url }),
