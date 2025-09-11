@@ -54,7 +54,7 @@ const btn = async (formataData) => {
   };
 
   // ডাউনলোড request পাঠাচ্ছি
-  const res = await fetch('https://frontend-project-yd.vercel.app/api/routes/api3', {
+  const res = await fetch('https://frontend-project-yd.vercel.app/api/routes/apithree', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ formataData: formataData }),
