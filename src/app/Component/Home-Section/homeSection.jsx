@@ -18,7 +18,7 @@ export default function Home() {
     }
 
     setLoading(true);
-    const res = await fetch('/api/routes/api', {
+    const res = await fetch('https://frontend-project-yd.vercel.app/api/routes/api', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url }),
@@ -54,7 +54,7 @@ const btn = async (formataData) => {
   };
 
   // ডাউনলোড request পাঠাচ্ছি
-  const res = await fetch('/api/routes/api3', {
+  const res = await fetch('https://frontend-project-yd.vercel.app/api/routes/api3', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ formataData: formataData }),
