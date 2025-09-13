@@ -1,14 +1,13 @@
 
 
 "use client"
-import socket from '@/app/lib/socket';
-import Image from 'next/image';
 import { useState } from 'react';
+import Image from 'next/image';
+import { io } from "socket.io-client";
 
 
 
-
-
+  const socket = io("http://localhost:5000/");
 
 export default function Home() {
   const [url, setUrl] = useState('');
@@ -16,9 +15,14 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   const [totalProgress, setTotalProgress] = useState(0);
-  const [video, setVideo] = useState(0);
-    const [audio, setAudio] = useState(0);
+
   const [totalSizeF, setTotalSizeF] = useState(0);
+
+
+
+
+
+
 
   async function handleDownloadinfo() {
     if (!url ) {
@@ -27,7 +31,7 @@ export default function Home() {
     }
 
     setLoading(true);
-    const res = await fetch('https://backend-projectyd-production.up.railway.app/api/folo', {
+    const res = await fetch('http://localhost:5000/api/folo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url }),
@@ -45,8 +49,6 @@ export default function Home() {
 
 socket.on("videokoto", (data) => {
 
-  // setVideo(data.video)
-  // setAudio(data.audio)
   setTotalProgress(data.total)
 
 });
@@ -56,19 +58,18 @@ socket.on("videokoto", (data) => {
 const btn = async (formataData) => {
   alert("Download starting...");
 
-  // প্রথমে progress ও totalSize reset
+  // progress totalSize reset
 setTotalProgress(0)
   setTotalSizeF(0);
 
-  // নতুন total size হিসাব
+  // total size 
   const newTotalSize = parseFloat(formataData[0].size) + parseFloat(downloadData?.ausioSizesFor);
   setTotalSizeF(newTotalSize);
 
 
  
 
-  // ডাউনলোড request পাঠাচ্ছি
-  const res = await fetch('https://backend-projectyd-production.up.railway.app/download', {
+  const res = await fetch('http://localhost:5000/download', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ formataData: formataData, socketId: socket.id }),
@@ -78,7 +79,7 @@ setTotalProgress(0)
 
   
    
-  const totalSize = res.headers.get("content-length") / 1024 / 1024; 
+ 
 
   const blob = await res.blob();
   const downloadUrl = window.URL.createObjectURL(blob);
@@ -90,7 +91,7 @@ setTotalProgress(0)
   a.remove();
   window.URL.revokeObjectURL(downloadUrl);
 
-  // ডাউনলোড শেষ হলে SSE বন্ধ
+  
   
 
 
