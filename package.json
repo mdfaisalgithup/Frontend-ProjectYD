@@ -17,6 +17,7 @@
     "postcss": "^8.5.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "socket.io-client": "^4.8.1",
     "ws": "^8.18.3",
     "ytdl-core": "npm:@distube/ytdl-core@^4.16.12"
   },

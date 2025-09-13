@@ -1,14 +1,23 @@
 
 
 "use client"
+import socket from '@/app/lib/socket';
 import Image from 'next/image';
-import {  useState } from 'react';
+import { useState } from 'react';
+
+
+
+
+
 
 export default function Home() {
   const [url, setUrl] = useState('');
   const [downloadData, setDownloadData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
+
+  const [totalProgress, setTotalProgress] = useState(0);
+  const [video, setVideo] = useState(0);
+    const [audio, setAudio] = useState(0);
   const [totalSizeF, setTotalSizeF] = useState(0);
 
   async function handleDownloadinfo() {
@@ -18,7 +27,7 @@ export default function Home() {
     }
 
     setLoading(true);
-    const res = await fetch('https://frontend-project-yd.vercel.app/api/routes/api', {
+    const res = await fetch('https://backend-projectyd-production.up.railway.app/api/folo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url }),
@@ -30,35 +39,43 @@ export default function Home() {
   }
 
 
+
+
+
+
+socket.on("videokoto", (data) => {
+
+  // setVideo(data.video)
+  // setAudio(data.audio)
+  setTotalProgress(data.total)
+
+});
+
+
+
 const btn = async (formataData) => {
   alert("Download starting...");
 
   // প্রথমে progress ও totalSize reset
-  setProgress(0);
+setTotalProgress(0)
   setTotalSizeF(0);
 
   // নতুন total size হিসাব
   const newTotalSize = parseFloat(formataData[0].size) + parseFloat(downloadData?.ausioSizesFor);
   setTotalSizeF(newTotalSize);
 
-  // SSE connection খুলে দিচ্ছি
-  const eventSource = new EventSource("https://backend-project-yd.vercel.app/progress-stream");
 
-  eventSource.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    setProgress(data.total);
-  };
-
-  eventSource.onerror = () => {
-    console.error("❌ SSE connection error");
-  };
+ 
 
   // ডাউনলোড request পাঠাচ্ছি
-  const res = await fetch('https://frontend-project-yd.vercel.app/api/routes/apithree', {
+  const res = await fetch('https://backend-projectyd-production.up.railway.app/download', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ formataData: formataData }),
+    body: JSON.stringify({ formataData: formataData, socketId: socket.id }),
+
   }); 
+
+
   
    
   const totalSize = res.headers.get("content-length") / 1024 / 1024; 
@@ -74,15 +91,18 @@ const btn = async (formataData) => {
   window.URL.revokeObjectURL(downloadUrl);
 
   // ডাউনলোড শেষ হলে SSE বন্ধ
-  eventSource.close();
+  
 
-  // progress & totalSize reset (optional)
-  setProgress(0);
+
+setTotalProgress(0)
   setTotalSizeF(0);
 };
 
 
-console.log(totalSizeF + " " + progress) 
+
+
+
+// console.log(totalSizeF + " " + progress) 
 
   return (
     <div className='xl:mx-[220px] lg:mx-[150px] md:mx-[50px] sm:mx-[5px] mx-0  mt-[10px] mb-20 '>
@@ -152,50 +172,7 @@ console.log(totalSizeF + " " + progress)
                   </ul>
 
                   {/* Progress Bar */}
-               {parseFloat(totalSizeF) > 0 && (
-  // <div className="mt-5">
-  //   {/* Progress Bar */}
-  //   <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
-  //     <div
-  //       className="bg-green-500 h-4 transition-all duration-300"
-  //       style={{
-  //         width: `${Math.min((progress / parseFloat(totalSizeF)) * 100).toFixed(2)}%`
-  //       }}
-  //     ></div>
-  //   </div>
 
-  //   {/* Percentage */}
-  //   <p className="mt-2">
-  //     {Math.min((progress / parseFloat(totalSizeF)) * 100, 100).toFixed(2)}%
-  //   </p>
-
-  //   {/* MB Info */}
-  //   <p className="text-sm text-gray-600">
-  //     {progress.toFixed(2)} MB / {parseFloat(totalSizeF).toFixed(2)} MB
-  //   </p>
-  // </div>
-  <div className="mt-5">
-    {/* Progress Bar */}
-    <div className="w-full bg-gray-300 rounded-full h-4 overflow-hidden">
-      <div
-        className="bg-green-500 h-4 transition-all duration-300"
-        style={{
-          width: `${Math.min((progress / parseFloat(totalSizeF)) * 100, 100).toFixed(2)}%`
-        }}
-      ></div>
-    </div>
-
-    {/* Percentage */}
-    <p className="mt-2">
-      {Math.min(totalSizeF === 0 ? 0 : (progress / parseFloat(totalSizeF)) * 100, 100).toFixed(2)}%
-    </p>
-
-    {/* MB Info */}
-    <p className="text-sm text-gray-600">
-      {progress.toFixed(2)} MB / {parseFloat(totalSizeF).toFixed(2)} MB
-    </p>
-  </div>
-)}
 
 
 
@@ -206,19 +183,19 @@ console.log(totalSizeF + " " + progress)
       <div
         className="bg-green-500 h-4 transition-all duration-300"
         style={{
-          width: `${ parseFloat(totalSizeF) == 0 ? 0 : Math.min((progress / parseFloat(totalSizeF)) * 100, 100).toFixed(2)}%`
+          width: `${ parseFloat(totalSizeF) == 0 ? 0 : Math.min((totalProgress / parseFloat(totalSizeF)) * 100, 100)}%`
         }}
       ></div>
     </div>
 
     {/* Percentage */}
     <p className="mt-2">
-      {Math.min(totalSizeF === 0 ? 0 : (progress / parseFloat(totalSizeF)) * 100, 100).toFixed(2)}%
+      {Math.min(totalSizeF === 0 ? 0 : (totalProgress / parseFloat(totalSizeF)) * 100, 100)}%
     </p>
 
     {/* MB Info */}
     <p className="text-sm text-gray-600">
-      {progress.toFixed(2)} MB / {parseFloat(totalSizeF).toFixed(2)} MB
+      {totalProgress} MB / {parseFloat(totalSizeF)} MB
     </p>
   </div>
 
