@@ -6,6 +6,17 @@ import './globals.css';
 export const metadata = {
   title: "Youtube Trusted Downloader - [Official Website] (Ytds.com)",
   description: "Youtube Trusted Downloader - Ytds.com",
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      
+      
+    }
+  }
 };
 
 
