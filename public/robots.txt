@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://ytds-downloader.vercel.app
+
+# Sitemaps
+Sitemap: https://ytds-downloader.vercel.app/sitemap.xml
