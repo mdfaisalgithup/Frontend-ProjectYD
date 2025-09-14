@@ -7,7 +7,7 @@ import { io } from "socket.io-client";
 
 
 
-  const socket = io("https://backend-projectyd-production.up.railway.app");
+  const socket = io("http://localhost:5000");
 
 export default function Home() {
   const [url, setUrl] = useState('');
@@ -31,7 +31,7 @@ export default function Home() {
     }
 
     setLoading(true);
-    const res = await fetch('https://backend-projectyd-production.up.railway.app/api/folo', {
+    const res = await fetch('http://localhost:5000/api/folo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url }),
@@ -56,9 +56,13 @@ socket.on("videokoto", (data) => {
 
 
 const btn = async (formataData) => {
-  alert("Download starting...");
 
-  // progress totalSize reset
+
+
+
+
+
+//   // progress totalSize reset
 setTotalProgress(0)
   setTotalSizeF(0);
 
@@ -69,7 +73,7 @@ setTotalProgress(0)
 
  
 
-  const res = await fetch('https://backend-projectyd-production.up.railway.app/download', {
+  const res = await fetch('http://localhost:5000/download', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ formataData: formataData, socketId: socket.id }),
@@ -97,6 +101,10 @@ setTotalProgress(0)
 
 setTotalProgress(0)
   setTotalSizeF(0);
+
+
+   
+
 };
 
 
