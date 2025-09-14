@@ -2,5 +2,6 @@
 module.exports = {
   siteUrl: 'https://ytds-downloader.vercel.app', 
   generateRobotsTxt: true,           
-  sitemapSize: 5000,                  
+  sitemapSize: 5000, 
+   outDir: './public'                 
 };
