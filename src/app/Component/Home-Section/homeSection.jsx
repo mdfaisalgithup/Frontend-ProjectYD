@@ -7,7 +7,7 @@ import { io } from "socket.io-client";
 
 
 
-  const socket = io("http://localhost:5000");
+  const socket = io("https://backend-projectyd-production.up.railway.app");
 
 export default function Home() {
   const [url, setUrl] = useState('');
@@ -31,7 +31,7 @@ export default function Home() {
     }
 
     setLoading(true);
-    const res = await fetch('http://localhost:5000/api/folo', {
+    const res = await fetch('https://backend-projectyd-production.up.railway.app/api/folo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url }),
@@ -73,7 +73,7 @@ setTotalProgress(0)
 
  
 
-  const res = await fetch('http://localhost:5000/download', {
+  const res = await fetch('https://backend-projectyd-production.up.railway.app/download', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ formataData: formataData, socketId: socket.id }),
