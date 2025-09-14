@@ -1,7 +1,0 @@
-# robots.txt for https://ytds-downloader.vercel.app/
-
-User-agent: *
-Disallow: /api/
-Allow: /
-
-Sitemap: https://ytds-downloader.vercel.app/sitemap.xml
