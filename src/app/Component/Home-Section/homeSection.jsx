@@ -1,7 +1,7 @@
 
 
 "use client"
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { io } from "socket.io-client";
 
@@ -20,7 +20,10 @@ export default function Home() {
 
 
 
-
+  const [videoProgress, setVideoProgress] = useState(0);
+  const [audioProgress, setAudioProgress] = useState(0);
+  const [mergeProgress, setMergeProgress] = useState(0);
+  const [statusMessage, setStatusMessage] = useState("");
 
 
 
@@ -45,13 +48,33 @@ export default function Home() {
 
 
 
+   // Video + audio download progress
+ socket.on("videokoto", (data) => {
+      setVideoProgress(data.video);
+      setAudioProgress(data.audio);
+      setTotalProgress(data.total)
+    });
 
 
-socket.on("videokoto", (data) => {
+ 
 
-  setTotalProgress(data.total)
+useEffect(() => {
+ 
 
-});
+     // Merge progress
+    socket.on("mergeProgress", (data) => {
+      setMergeProgress(data.percent);
+    });
+ 
+
+    // Merge finished or error
+    socket.on("mergeStatus", (data) => {
+      setStatusMessage(data.message);
+    });
+
+    // Cleanup on unmount
+ 
+  }, [totalProgress]);
 
 
 
@@ -63,12 +86,16 @@ const btn = async (formataData) => {
 
 
 //   // progress totalSize reset
-setTotalProgress(0)
+  setTotalProgress(0)
   setTotalSizeF(0);
-
+  setMergeProgress(0)
+setStatusMessage("")
+setAudioProgress(0)
+setVideoProgress(0)
   // total size 
   const newTotalSize = parseFloat(formataData[0].size) + parseFloat(downloadData?.ausioSizesFor);
   setTotalSizeF(newTotalSize);
+
 
 
  
@@ -101,8 +128,9 @@ setTotalProgress(0)
 
 setTotalProgress(0)
   setTotalSizeF(0);
-
-
+setMergeProgress(0)
+setAudioProgress(0)
+setVideoProgress(0)
    
 
 };
@@ -111,7 +139,6 @@ setTotalProgress(0)
 
 
 
-// console.log(totalSizeF + " " + progress) 
 
   return (
     <div className='xl:mx-[220px] lg:mx-[150px] md:mx-[50px] sm:mx-[5px] mx-0  mt-[10px] mb-20 '>
@@ -206,8 +233,24 @@ setTotalProgress(0)
 
     {/* MB Info */}
     <p className="text-sm text-gray-600">
-      {totalProgress} MB / {parseFloat(totalSizeF)} MB
+      {parseFloat(totalProgress).toFixed(2)} MB / {parseFloat(totalSizeF).toFixed(2)} MB
     </p>
+    <div>
+   <div className='border-1 border-[#ddd] shadow-md my-2 p-2'>
+        <h2 lassName='font-semibold'>Merge Progress:</h2>
+      <p>{mergeProgress ? mergeProgress + "%" : <h2 className='text-red-500'>"Waiting..."</h2>}</p>
+   </div>
+   <div className='border-1 border-[#ddd] shadow-md my-2 p-2'>
+       <h2 className='font-semibold'>Status:</h2>
+      <div>{statusMessage.length > 0 ? <p className='text-green-500  font-medium'> {statusMessage }</p> : "No Merging" }</div>
+   </div>
+    </div>
+
+    <div className='border-1 border-[#ddd] shadow-md my-2 p-2'>
+         <h2 className='font-semibold'>Download Progress</h2>
+      <p>Video: {videoProgress < 0 ? videoProgress : 0} MB</p>
+      <p>Audio: {audioProgress < 0 ?  audioProgress : 0} MB</p>
+    </div>
   </div>
 
 
