@@ -7,7 +7,12 @@ import { io } from "socket.io-client";
 
 
 
-const socket = io("https://backend-projectyd-production.up.railway.app");
+const socket = io(
+  process.env.NODE_ENV === "production"
+    ? "https://backend-projectyd-production.up.railway.app/"
+    : "http://localhost:5000",
+  { transports: ["websocket"] }
+);
 
 export default function Home() {
   const [url, setUrl] = useState('');
