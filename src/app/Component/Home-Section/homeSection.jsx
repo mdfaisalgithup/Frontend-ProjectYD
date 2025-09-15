@@ -52,31 +52,52 @@ export default function Home() {
   }
 
 
+useEffect(() => {
+  // Merge progress
+  const mergeProgressHandler = (data) => setMergeProgress(data.percent);
+  const mergeStatusHandler = (data) => setStatusMessage(data.message);
+  const videoHandler = (data) => {
+    setVideoProgress(data.video);
+    setAudioProgress(data.audio);
+    setTotalProgress(data.total);
+  };
+
+  socket.on("mergeProgress", mergeProgressHandler);
+  socket.on("mergeStatus", mergeStatusHandler);
+  socket.on("videokoto", videoHandler);
+
+  // Cleanup: remove listeners when component unmount
+  return () => {
+    socket.off("mergeProgress", mergeProgressHandler);
+    socket.off("mergeStatus", mergeStatusHandler);
+    socket.off("videokoto", videoHandler);
+  };
+}, []); // <-- empty dependency, run only once
 
 
   
 
-  useEffect(() => {
-    // Merge progress
-    socket.on("mergeProgress", (data) => {
-      setMergeProgress(data.percent);
-    });
+  // useEffect(() => {
+  //   // Merge progress
+  //   socket.on("mergeProgress", (data) => {
+  //     setMergeProgress(data.percent);
+  //   });
 
-    // Merge finished or error
-    socket.on("mergeStatus", (data) => {
-      setStatusMessage(data.message);
-    });
+  //   // Merge finished or error
+  //   socket.on("mergeStatus", (data) => {
+  //     setStatusMessage(data.message);
+  //   });
 
-    // Video + audio download progress
-    socket.on("videokoto", (data) => {
-      setVideoProgress(data.video);
-      setAudioProgress(data.audio);
-      setTotalProgress(data.total);
-    });
+  //   // Video + audio download progress
+  //   socket.on("videokoto", (data) => {
+  //     setVideoProgress(data.video);
+  //     setAudioProgress(data.audio);
+  //     setTotalProgress(data.total);
+  //   });
 
-    // Cleanup: remove all listeners when component unmount
+  //   // Cleanup: remove all listeners when component unmount
 
-  }, [totalProgress]); // <-- empty dependency (just run once)
+  // }, [totalProgress]); // <-- empty dependency (just run once)
 
 
 const btn = async (formataData) => {
