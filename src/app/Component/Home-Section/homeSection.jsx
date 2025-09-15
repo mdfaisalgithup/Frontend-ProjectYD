@@ -7,9 +7,7 @@ import { io } from "socket.io-client";
 
 
 
-const socket = io("https://ytds-downloader.vercel.app", {
-  
-});
+const socket = io("https://backend-projectyd-production.up.railway.app");
 
 export default function Home() {
   const [url, setUrl] = useState('');
@@ -36,7 +34,7 @@ export default function Home() {
     }
 
     setLoading(true);
-    const res = await fetch('https://ytds-downloader.vercel.app/api/folo', {
+    const res = await fetch('https://backend-projectyd-production.up.railway.app/api/folo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url }),
@@ -102,7 +100,7 @@ setVideoProgress(0)
 
  
 
-  const res = await fetch('https://ytds-downloader.vercel.app/download', {
+  const res = await fetch('https://backend-projectyd-production.up.railway.app/download', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ formataData: formataData, socketId: socket.id }),
