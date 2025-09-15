@@ -7,7 +7,9 @@ import { io } from "socket.io-client";
 
 
 
-  const socket = io("https://backend-projectyd-production.up.railway.app");
+const socket = io("https://ytds-downloader.vercel.app", {
+  
+});
 
 export default function Home() {
   const [url, setUrl] = useState('');
@@ -34,7 +36,7 @@ export default function Home() {
     }
 
     setLoading(true);
-    const res = await fetch('https://backend-projectyd-production.up.railway.app/api/folo', {
+    const res = await fetch('https://ytds-downloader.vercel.app/api/folo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url }),
@@ -42,40 +44,40 @@ export default function Home() {
 
     const data = await res.json();
     setDownloadData(data);
+
     setLoading(false);
   }
 
 
 
 
-   // Video + audio download progress
- socket.on("videokoto", (data) => {
-      setVideoProgress(data.video);
-      setAudioProgress(data.audio);
-      setTotalProgress(data.total)
-    });
+  
 
-
- 
-
-useEffect(() => {
- 
-
-     // Merge progress
+  useEffect(() => {
+    // Merge progress
     socket.on("mergeProgress", (data) => {
       setMergeProgress(data.percent);
     });
- 
 
     // Merge finished or error
     socket.on("mergeStatus", (data) => {
       setStatusMessage(data.message);
     });
 
-    // Cleanup on unmount
- 
-  }, [totalProgress]);
+    // Video + audio download progress
+    socket.on("videokoto", (data) => {
+      setVideoProgress(data.video);
+      setAudioProgress(data.audio);
+      setTotalProgress(data.total);
+    });
 
+    // Cleanup: remove all listeners when component unmount
+    return () => {
+      socket.off("mergeProgress");
+      socket.off("mergeStatus");
+      socket.off("videokoto");
+    };
+  }, []); // <-- empty dependency (just run once)
 
 
 const btn = async (formataData) => {
@@ -100,7 +102,7 @@ setVideoProgress(0)
 
  
 
-  const res = await fetch('https://backend-projectyd-production.up.railway.app/download', {
+  const res = await fetch('https://ytds-downloader.vercel.app/download', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ formataData: formataData, socketId: socket.id }),
@@ -109,6 +111,7 @@ setVideoProgress(0)
 
 
   
+
    
  
 
@@ -193,7 +196,7 @@ setVideoProgress(0)
                       <li className='border-1 my-1 hover:bg-blue-100 border-[#0e0e0e2f] p-3' key={format.itag}>
                         <div>
                           <b>{format?.qualityLabel}</b> | {"PRO Version" + " "} | {" "} 
-                         {(parseFloat(format.size
+                         {(parseFloat(format?.size
                         ) + parseFloat(downloadData?.ausioSizesFor)).toFixed(2) + " MB"}
                         </div>
                         <br />
@@ -237,8 +240,8 @@ setVideoProgress(0)
     </p>
     <div>
    <div className='border-1 border-[#ddd] shadow-md my-2 p-2'>
-        <h2 lassName='font-semibold'>Merge Progress:</h2>
-      <p>{mergeProgress ? mergeProgress + "%" : <h2 className='text-red-500'>"Waiting..."</h2>}</p>
+        <h2 className='font-semibold'>Merge Progress:</h2>
+      <div>{mergeProgress ? mergeProgress + "%" : <h2 className='text-red-500'>"Waiting..."</h2>}</div>
    </div>
    <div className='border-1 border-[#ddd] shadow-md my-2 p-2'>
        <h2 className='font-semibold'>Status:</h2>
@@ -248,8 +251,8 @@ setVideoProgress(0)
 
     <div className='border-1 border-[#ddd] shadow-md my-2 p-2'>
          <h2 className='font-semibold'>Download Progress</h2>
-      <p>Video: {videoProgress < 0 ? videoProgress : 0} MB</p>
-      <p>Audio: {audioProgress < 0 ?  audioProgress : 0} MB</p>
+      <p>Video: {videoProgress !== 0 ? videoProgress : 0} MB</p>
+      <p>Audio: {audioProgress !== 0 ?  audioProgress : 0} MB</p>
     </div>
   </div>
 
