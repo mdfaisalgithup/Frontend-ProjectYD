@@ -75,12 +75,8 @@ export default function Home() {
     });
 
     // Cleanup: remove all listeners when component unmount
-    return () => {
-      socket.off("mergeProgress");
-      socket.off("mergeStatus");
-      socket.off("videokoto");
-    };
-  }, []); // <-- empty dependency (just run once)
+
+  }, [totalProgress]); // <-- empty dependency (just run once)
 
 
 const btn = async (formataData) => {
