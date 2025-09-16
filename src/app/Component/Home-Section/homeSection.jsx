@@ -7,7 +7,9 @@ import { io } from "socket.io-client";
 
 
 
-const socket = io("https://backend-projectyd-production.up.railway.app");
+const socket = io("https://your-koyeb-app.koyeb.app", {
+  transports: ["websocket"],
+});
 
 export default function Home() {
   const [url, setUrl] = useState('');
