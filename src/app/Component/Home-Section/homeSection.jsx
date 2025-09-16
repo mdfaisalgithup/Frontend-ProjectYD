@@ -9,7 +9,7 @@ import { io } from "socket.io-client";
 
 const socket = io(
   process.env.NODE_ENV === "production"
-    ? "https://backend-projectyd-production.up.railway.app"
+    ? "https://backend-projectyd.onrender.com"
     : "http://localhost:5000",
   { transports: ["websocket"] }
 );
@@ -39,7 +39,7 @@ export default function Home() {
     }
 
     setLoading(true);
-    const res = await fetch('https://backend-projectyd-production.up.railway.app/api/folo', {
+    const res = await fetch('https://backend-projectyd.onrender.com/api/folo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url }),
@@ -101,7 +101,7 @@ setVideoProgress(0)
 
  
 
-  const res = await fetch('https://backend-projectyd-production.up.railway.app/download', {
+  const res = await fetch('https://backend-projectyd.onrender.com/download', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ formataData: formataData, socketId: socket.id }),
