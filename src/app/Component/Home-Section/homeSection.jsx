@@ -7,8 +7,7 @@ import { io } from "socket.io-client";
 
 
 
-const socket = io("https://backend-projectyd.onrender.com");
-
+const socket = io("https://backend-projectyd-production.up.railway.app");
 
 export default function Home() {
   const [url, setUrl] = useState('');
@@ -35,7 +34,7 @@ export default function Home() {
     }
 
     setLoading(true);
-    const res = await fetch('https://backend-projectyd.onrender.com/api/folo', {
+    const res = await fetch('https://backend-projectyd-production.up.railway.app/api/folo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url }),
@@ -97,7 +96,7 @@ setVideoProgress(0)
 
  
 
-  const res = await fetch('https://backend-projectyd.onrender.com/download', {
+  const res = await fetch('https://backend-projectyd-production.up.railway.app/download', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ formataData: formataData, socketId: socket.id }),
