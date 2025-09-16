@@ -7,7 +7,7 @@ import { io } from "socket.io-client";
 
 
 
-const socket = io("https://your-koyeb-app.koyeb.app", {
+const socket = io("https://backend-projectyd-production.up.railway.app", {
   transports: ["websocket"],
 });
 
