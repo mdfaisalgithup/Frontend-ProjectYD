@@ -7,12 +7,8 @@ import { io } from "socket.io-client";
 
 
 
-const socket = io(
-  process.env.NODE_ENV === "production"
-    ? "https://backend-projectyd.onrender.com"
-    : "http://localhost:5000",
-  { transports: ["websocket"] }
-);
+const socket = io("https://backend-projectyd.onrender.com");
+
 
 export default function Home() {
   const [url, setUrl] = useState('');
